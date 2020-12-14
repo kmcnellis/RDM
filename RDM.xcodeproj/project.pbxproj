@@ -15,6 +15,8 @@
 		358D5660212DEDED00F9E9BF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 358D5659212DEDEC00F9E9BF /* README.md */; };
 		358D5661212DEDED00F9E9BF /* ResMenuItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 358D565B212DEDED00F9E9BF /* ResMenuItem.mm */; };
 		358F04E3212D7E6500671ABD /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358F04E2212D7E6500671ABD /* IOKit.framework */; };
+		35959C0225757F1E0002A45F /* HexNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35959C0125757F1E0002A45F /* HexNumberFormatter.swift */; };
+		35959C0525763EE40002A45F /* TextFieldWithMonospacedDigits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35959C0425763EE40002A45F /* TextFieldWithMonospacedDigits.swift */; };
 		35C9D3B0212C04DA00D652F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C9D3AF212C04DA00D652F7 /* ViewController.swift */; };
 		35C9D3B2212C04DD00D652F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35C9D3B1212C04DD00D652F7 /* Assets.xcassets */; };
 		35C9D3B5212C04DD00D652F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35C9D3B3212C04DD00D652F7 /* Main.storyboard */; };
@@ -40,6 +42,8 @@
 		358D565A212DEDED00F9E9BF /* RDMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDMAppDelegate.h; sourceTree = "<group>"; };
 		358D565B212DEDED00F9E9BF /* ResMenuItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ResMenuItem.mm; sourceTree = "<group>"; };
 		358F04E2212D7E6500671ABD /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		35959C0125757F1E0002A45F /* HexNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexNumberFormatter.swift; sourceTree = "<group>"; };
+		35959C0425763EE40002A45F /* TextFieldWithMonospacedDigits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithMonospacedDigits.swift; sourceTree = "<group>"; };
 		35C9D3AB212C04DA00D652F7 /* RDM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RDM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35C9D3AF212C04DA00D652F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		35C9D3B1212C04DD00D652F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -54,7 +58,6 @@
 		8FC72A1924F664BA004E10E1 /* Resolution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resolution.swift; sourceTree = "<group>"; };
 		8FC72A1A24F664BA004E10E1 /* CharEncDec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharEncDec.swift; sourceTree = "<group>"; };
 		8FC72A1B24F664BA004E10E1 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		8FEFEA2D2515A748001AD551 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +124,8 @@
 				8FC72A1A24F664BA004E10E1 /* CharEncDec.swift */,
 				8FC72A1B24F664BA004E10E1 /* Utils.swift */,
 				35CC4996212C54AF00704BD7 /* bridging.h */,
+				35959C0125757F1E0002A45F /* HexNumberFormatter.swift */,
+				35959C0425763EE40002A45F /* TextFieldWithMonospacedDigits.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -130,7 +135,6 @@
 			children = (
 				35C9D3B6212C04DD00D652F7 /* Info.plist */,
 				8F13DECB24FDCE790049A2DF /* export.plist */,
-				8FEFEA2D2515A748001AD551 /* MyPlayground.playground */,
 			);
 			path = etc;
 			sourceTree = "<group>";
@@ -215,6 +219,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8FC6639B25060DDF008466A1 /* SheetViewController.swift in Sources */,
+				35959C0225757F1E0002A45F /* HexNumberFormatter.swift in Sources */,
 				8F7B82132506878D0076803C /* IntegerValueTransformer.swift in Sources */,
 				358D565C212DEDED00F9E9BF /* RDMAppDelegate.mm in Sources */,
 				358D5661212DEDED00F9E9BF /* ResMenuItem.mm in Sources */,
@@ -222,6 +227,7 @@
 				35554437212C7CB00063AEE7 /* EditDisplayPlistItem.swift in Sources */,
 				8FC72A1D24F664BA004E10E1 /* CharEncDec.swift in Sources */,
 				8FC72A1E24F664BA004E10E1 /* Utils.swift in Sources */,
+				35959C0525763EE40002A45F /* TextFieldWithMonospacedDigits.swift in Sources */,
 				358D565D212DEDED00F9E9BF /* cmdline.mm in Sources */,
 				35C9D3B0212C04DA00D652F7 /* ViewController.swift in Sources */,
 				358D565E212DEDED00F9E9BF /* main.mm in Sources */,

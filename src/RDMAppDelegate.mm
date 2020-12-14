@@ -134,7 +134,7 @@ void DisplayReconfigurationCallback(CGDirectDisplayID cg_id,
             NSDictionary *deviceInfo = (__bridge NSDictionary *)IODisplayCreateInfoDictionary(IOServicePortFromCGDisplayID(display),
                                                                                               kIODisplayOnlyPreferredName);
             NSDictionary *localizedNames = [deviceInfo objectForKey:[NSString stringWithUTF8String:kDisplayProductName]];
-            CFRelease((CFDictionaryRef) deviceInfo); // Free memory
+            CFRelease((CFDictionaryRef) deviceInfo);
 
             if ([localizedNames count] > 0)
                 screenName = [localizedNames objectForKey:[[localizedNames allKeys] objectAtIndex:0]];
@@ -224,9 +224,9 @@ void DisplayReconfigurationCallback(CGDirectDisplayID cg_id,
     NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
     editResolutionsController = [storyBoard instantiateControllerWithIdentifier:@"edit"];
     ViewController *vc = (ViewController*)editResolutionsController.window.contentViewController;
-    vc.vendorID = sender.vendorID; // 1552;
-    vc.productID = sender.productID; // 0xa044;
-    vc.displayProductName = sender.displayName; // @"DEBUG";
+    vc.vendorID = sender.vendorID;
+    vc.productID = sender.productID;
+    vc.displayProductName = sender.displayName;
     [editResolutionsController showWindow:self];
     [NSApp activateIgnoringOtherApps:YES];
 }
@@ -318,19 +318,14 @@ CGError multiConfigureDisplays(CGDisplayConfigRef configRef, CGDirectDisplayID *
     CGDirectDisplayID display = [item display];
     int modeNum = [item modeNum];
 
-    SetDisplayModeNum(display, modeNum);
-    /*
-
-     CGDisplayConfigRef config;
-     if (CGBeginDisplayConfiguration(&config) == kCGErrorSuccess) {
-     CGConfigureDisplayWithDisplayMode(config, display, mode, NULL);
-     CGCompleteDisplayConfiguration(config, kCGConfigureForSession);
-     }*/
-    [self refreshStatusMenu];
+    dispatch_async(self->queue, ^{
+        SetDisplayModeNum(display, modeNum);
+    });
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification*) notification
 {
+    self->queue = dispatch_queue_create("setModeQueue", nil);
     // NSLog(@"Finished launching");
     [self refreshStatusMenu];
     CGDisplayRegisterReconfigurationCallback(DisplayReconfigurationCallback, (void*)self);

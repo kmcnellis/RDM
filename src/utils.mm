@@ -20,8 +20,7 @@ void CopyAllDisplayModes(CGDirectDisplayID display, modes_D4** modes, int* cnt)
     
     *modes = (modes_D4*) malloc(sizeof(modes_D4)* nModes);
     for (int i=0; i<nModes; i++)
-    {
-        
+    {        
         CGSGetDisplayModeDescriptionOfLength(display, i, &(*modes)[i], 0xD4);
     }
 }

@@ -63,9 +63,9 @@ import Cocoa
 
     @IBAction func add(_ sender: Any?) {
         if _parent.arrayController.selectionIndexes.count == 0 {
-            _parent.resolutions[0].append(_resolution)
+            _parent.resolutions.append(_resolution)
         }
-        _parent.arrayController.content = _parent.resolutions[0]
+        _parent.arrayController.content = _parent.resolutions
         _parent.arrayController.rearrangeObjects()
         dismiss(self)
     }
@@ -75,7 +75,7 @@ import Cocoa
 
         _parent = (presentingViewController as! ViewController)
         if _parent.arrayController.selectionIndexes.count > 0 {
-            _resolution = _parent.resolutions[0][_parent.arrayController.selectionIndex]
+            _resolution = _parent.resolutions[_parent.arrayController.selectionIndex] 
         }
 
         widthField .integerValue = Int(width)

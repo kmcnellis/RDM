@@ -17,9 +17,9 @@ import Cocoa
     private static let backupDir = getAppSupportDir(withTrailingPath: "\(Bundle.main.bundleIdentifier!)/Backups")
 
     @objc init(title : String, action : Selector, vendorID : UInt32, productID : UInt32, displayName : String) {
-        self.vendorID    = vendorID // 1552
-        self.productID   = productID // 0x9c2c
-        self.displayName = displayName // "DEBUG"
+        self.vendorID    = vendorID
+        self.productID   = productID
+        self.displayName = displayName
         self.filePath    = String(format: "\(ViewController.dirformat)/\(ViewController.fileformat)", self.vendorID, self.productID)
 
         super.init(title: title, action: action, keyEquivalent: "")
@@ -104,24 +104,14 @@ import Cocoa
 
     @objc func restoreSettings() -> NSDictionary? {
         var restoreScripts = [String]()
-        var rootdirs       = [ViewController.rootdir]
 
-        if ViewController.afterCatalina
-            && ViewController.rootWriteable {
-            rootdirs.append("/System" + rootdirs[0])
+        let backupFilePath = RestoreSettingsItem.backupDir.appendingPathComponent(filePath).standardizedFileURL.path
+        if !ViewController.supportsLibraryDisplays && ViewController.rootWriteable && FileManager.default.fileExists(atPath: backupFilePath) {
+            restoreScripts.append("cp -f '\(backupFilePath)' '/System\(ViewController.rootdir)/\(filePath)'")            
         }
-
-        for dir in rootdirs {
-            let fullPath = "\(dir)/\(filePath)"
-
-            if FileManager.default.fileExists(atPath: fullPath) {
-                if dir.hasPrefix("/System") {
-                    restoreScripts.append(
-                        "cp -f '\(RestoreSettingsItem.backupDir.appendingPathComponent(filePath).standardizedFileURL.path)' '\(fullPath)'")
-                } else {
-                    restoreScripts.append("rm -f '\(fullPath)'")
-                }
-            }
+        
+        if FileManager.default.fileExists(atPath: "\(ViewController.rootdir)/\(filePath)") {
+            restoreScripts.append("rm -f '\(ViewController.rootdir)/\(filePath)'")
         }
 
         var error: NSDictionary? = nil

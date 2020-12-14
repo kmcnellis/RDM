@@ -8,25 +8,27 @@
 
 import Cocoa
 
+let kScaleResolutionsKey = "scale-resolutions"
+let kTargetDefaultPixelsPerMillimeterKey = "target-default-ppmm"
+
 @objc class ViewController: NSViewController {
 
-    // Assume SIP status and OS version are constants
-    static let rootWriteable = !isSIPActive()
-    static let afterCatalina = ProcessInfo().isOperatingSystemAtLeast(
-        OperatingSystemVersion(majorVersion: 10, minorVersion: 15, patchVersion: 0))
-    static let rootdir       = ( ViewController.afterCatalina
-        ?  "" : "/System" ) + "/Library/Displays/Contents/Resources/Overrides"
+    // Actually /Library/Displays was introduced in one of Catalina updates, but I don't know which one
+    static let supportsLibraryDisplays = ProcessInfo().isOperatingSystemAtLeast(
+        OperatingSystemVersion(majorVersion: 10, minorVersion: 15, patchVersion: 0)) 
+    static let rootWriteable = !supportsLibraryDisplays && !isSIPActive()
+    static let rootdir       = "/Library/Displays/Contents/Resources/Overrides"
     static let dirformat     = "DisplayVendorID-%x"
     static let fileformat    = "DisplayProductID-%x"
 
     @IBOutlet var arrayController : NSArrayController!
               var calcController  : SheetViewController!
-              var plists          : [NSMutableDictionary] = []
+              var plist           : NSMutableDictionary!
 
     @IBOutlet weak var displayName : NSTextField!
     @objc          var vendorID    : UInt32         = 0
     @objc          var productID   : UInt32         = 0
-                   var resolutions : [[Resolution]] = []
+    @objc dynamic  var resolutions : [Resolution] = []
 
     // For help
     var helpPopover     : NSPopover!
@@ -40,18 +42,29 @@ import Cocoa
         }
     }
 
-    var dirs : [String] {
+    var sourceDirs : [String] {
         get {
-            let destdir = String(format: "\(ViewController.rootdir)/\(ViewController.dirformat)", vendorID)
-
-            return ViewController.rootWriteable && ViewController.afterCatalina
-                ? [destdir, "/System" + destdir] : [destdir]
+            let srcDir = String(format: "\(ViewController.rootdir)/\(ViewController.dirformat)", vendorID)
+            return ViewController.supportsLibraryDisplays ? [srcDir, "/System" + srcDir] : ["/System" + srcDir]
+        }
+    }
+    
+    var destinationDir : String {
+        get {
+            let dstDir = String(format: "\(ViewController.rootdir)/\(ViewController.dirformat)", vendorID)
+            return ViewController.supportsLibraryDisplays ? dstDir : "/System" + dstDir
         }
     }
 
-    var fileNames : [String] {
+    var sourceFiles : [String] {
         get {
-            return dirs.map { String(format:"\($0)/\(ViewController.fileformat)", productID) }
+            return sourceDirs.map { String(format:"\($0)/\(ViewController.fileformat)", productID) }
+        }
+    }
+    
+    var destinationFile : String {
+        get {
+            return String(format:"\(destinationDir)/\(ViewController.fileformat)", productID)
         }
     }
 
@@ -63,26 +76,21 @@ import Cocoa
     override func viewWillAppear() {
         super.viewWillAppear()
 
-        plists = fileNames.map { NSMutableDictionary(contentsOf: URL(fileURLWithPath: $0)) ?? NSMutableDictionary() }
-
-        if let a = plists[0][kDisplayProductName] as? String {
-            displayProductName = a
+        let plists = sourceFiles.map { NSMutableDictionary(contentsOf: URL(fileURLWithPath: $0)) ?? nil }.filter({$0 != nil})
+        if !plists.isEmpty {
+            plist = plists.first!!
+            if let a = plist[kDisplayProductName] as? String {
+                displayProductName = a
+            }
+        }
+        else {
+            plist = NSMutableDictionary()
         }
 
-        resolutions = [[Resolution]](repeating: [Resolution](), count: plists.count)
-        for (idx, plist) in plists.enumerated() {
-            if let a = plist["scale-resolutions"] {
-                if let b = a as? NSArray {
-                    resolutions[idx] = (b as Array).map { Resolution(nsdata: $0 as? NSData) }
-
-                    if idx != 0 && resolutions.count > 1 {
-                        for res in resolutions[idx] {
-                            if !(resolutions[0].contains { $0 == res }) {
-                                resolutions[0].append(res)
-                            }
-                        }
-                    }
-                }
+        resolutions = []
+        if let a = plist[kScaleResolutionsKey] {
+            if let b = a as? NSArray {
+                resolutions = (b as Array).map { Resolution(nsdata: $0 as? NSData) }
             }
         }
 
@@ -99,7 +107,7 @@ import Cocoa
         view.window!.styleMask.insert(.resizable)
 
         DispatchQueue.main.async {
-            self.arrayController.content = self.resolutions[0]
+            self.arrayController.content = self.resolutions
         }
     }
 
@@ -109,8 +117,7 @@ import Cocoa
     }
 
     @IBAction func add(_ sender: Any) {
-        resolutions[0].append(Resolution())
-        arrayController.content = resolutions[0]
+        resolutions.append(Resolution())
         arrayController.rearrangeObjects()
     }
 
@@ -118,19 +125,7 @@ import Cocoa
 
     @IBAction func remove(_ sender: Any) {
         if arrayController.selectionIndexes.count > 0 {
-            let removed = arrayController.selectionIndexes.map { resolutions[0][$0] }
-
-            // For backward compatibility
-            if resolutions.count > 1 {
-                for rem in removed {
-                    if let j = resolutions[1].firstIndex(where: { $0 == rem }) {
-                        resolutions[1].remove(at: j)
-                    }
-                }
-            }
-
-            resolutions[0].remove(at: arrayController.selectionIndexes)
-            arrayController.content = resolutions[0]
+            resolutions.remove(at: arrayController.selectionIndexes)
             arrayController.rearrangeObjects()
         }
     }
@@ -138,24 +133,40 @@ import Cocoa
     @IBAction func save(_ sender: Any) {
         var saveScripts = [String]()
 
-        if ViewController.rootWriteable {
-            if let error = RestoreSettingsItem.backupSettings(originalPlistPath: fileNames.last!) {
-                NSAlert(fromDict: error).beginSheetModal(for: view.window!)
-                return
-            }
+        if let error = RestoreSettingsItem.backupSettings(originalPlistPath: sourceFiles.last!) {
+            NSAlert(fromDict: error).beginSheetModal(for: view.window!)
+            return
         }
 
-        for ((plist, resol), (dir, fileName)) in zip(zip(plists, resolutions), zip(dirs, fileNames)) {
-            let tmpFile = NSTemporaryDirectory() + UUID().uuidString
+        let tmpFile = NSTemporaryDirectory() + UUID().uuidString
 
-            plist.setValue(displayProductName as NSString, forKey: kDisplayProductName)
-            plist.setValue(resol.map { $0.toData() } as NSArray, forKey: "scale-resolutions")
-            plist.write(toFile: tmpFile, atomically: false)
-
-            saveScripts.append("mkdir -p '\(dir)'")
-            saveScripts.append("cp '\(tmpFile)' '\(fileName)'")
-            saveScripts.append("rm '\(tmpFile)'")
+        plist[kDisplayProductName] = displayProductName as NSString
+        
+        resolutions = resolutions.sorted { (a, b) -> Bool in
+            return a.width > b.width || a.width == b.width && a.height > b.height
         }
+        
+        let hiDPIResolutions = resolutions.filter({($0).RawFlags & kFlagHiDPI != 0})
+        let lowDPIResolutions = resolutions.filter({($0).RawFlags & kFlagHiDPI == 0})
+        let hiDPICounterparts = hiDPIResolutions.map { (r) -> Resolution in
+            let res = Resolution()
+            res.width = r.width * 2
+            res.height = r.height * 2
+            res.RawFlags = 0
+            return res
+        }        
+        
+        let finalResolutions = lowDPIResolutions + hiDPICounterparts + hiDPIResolutions
+        
+        plist[kScaleResolutionsKey] = finalResolutions.map { ($0 ).toData() } as NSArray
+        if plist[kTargetDefaultPixelsPerMillimeterKey] == nil {
+            plist[kTargetDefaultPixelsPerMillimeterKey] = 10.01
+        }
+        plist.write(toFile: tmpFile, atomically: false)
+
+        saveScripts.append("mkdir -p '\(destinationDir)'")
+        saveScripts.append("cp '\(tmpFile)' '\(destinationFile)'")
+        saveScripts.append("rm '\(tmpFile)'")
 
         if let error = NSAppleScript.executeAndReturnError(source: saveScripts.joined(separator: " && "),
                                                            asType: .shell,

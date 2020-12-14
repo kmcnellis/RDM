@@ -34,7 +34,6 @@
             title = [NSString stringWithFormat: @"%d × %d%@", width, height, emoji];
 
         [self setTitle: title];
-
         return self;
     }
     else
