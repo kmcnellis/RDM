@@ -9,9 +9,10 @@
 import Foundation
 
 let kFlagHiDPI         : UInt64 = 0x0000000100000000
-let kFlagUnknown1      : UInt64 = 0x0000000000020000
+let kFlagUnknown1      : UInt64 = 0x0000000000200000
 let kFlagRetinaDisplay : UInt64 = 0x0000000800000000
-let kFlagUnknown2      : UInt64 = 0x0000000000080000
+let kFlagUnknown2      : UInt64 = 0x0000000000800000
+let kFlagUnknown3      : UInt64 = 0x0000000200000000
 
 @objc class Resolution : NSObject {
     private var _width     : UInt32
@@ -68,6 +69,7 @@ let kFlagUnknown2      : UInt64 = 0x0000000000080000
             willChangeValue(forKey: "Retina")
             willChangeValue(forKey: "Unknown1")
             willChangeValue(forKey: "Unknown2")
+            willChangeValue(forKey: "Unknown3")
             let wasHiDPI = isHiDPI
             _hiDPIFlag = value
             if isHiDPI != wasHiDPI {
@@ -83,6 +85,7 @@ let kFlagUnknown2      : UInt64 = 0x0000000000080000
             didChangeValue(forKey: "Retina")
             didChangeValue(forKey: "Unknown1")
             didChangeValue(forKey: "Unknown2")
+            didChangeValue(forKey: "Unknown3")
         }
     }
     
@@ -122,10 +125,19 @@ let kFlagUnknown2      : UInt64 = 0x0000000000080000
         }
     }
     
+    @objc dynamic var Unknown3 : Bool {
+        get {
+            return RawFlags & kFlagUnknown3 != 0
+        }
+        set(value) {
+            setFlag(kFlagUnknown3, value)
+        }
+    }
+    
     override init() {
         self._width = 0
         self._height = 0
-        self._hiDPIFlag = 0
+        self._hiDPIFlag = kFlagRetinaDisplay | kFlagHiDPI | kFlagUnknown1
 
         super.init()
     }
@@ -181,5 +193,16 @@ let kFlagUnknown2      : UInt64 = 0x0000000000080000
         return (lhs._height    == rhs._height   )
             && (lhs._width     == rhs._width    )
             && (lhs._hiDPIFlag == rhs._hiDPIFlag)
+    }
+    
+    override func isEqual(_ object: Any?) -> Bool {
+        if let other = object as? Resolution {
+            return _width == other._width && _height == other._height && _hiDPIFlag == other._hiDPIFlag
+        }
+        return false
+    }
+    
+    override var hash: Int {
+        return 0 //Int(_width | _height | (UInt32)(_hiDPIFlag & 0xffffffff))
     }
 }

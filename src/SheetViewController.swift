@@ -74,8 +74,8 @@ import Cocoa
         super.viewWillAppear()
 
         _parent = (presentingViewController as! ViewController)
-        if _parent.arrayController.selectionIndexes.count > 0 {
-            _resolution = _parent.resolutions[_parent.arrayController.selectionIndex] 
+        if _parent.arrayController.selectionIndexes.count == 1 {
+            _resolution = _parent.arrayController.selectedObjects.first as! Resolution
         }
 
         widthField .integerValue = Int(width)

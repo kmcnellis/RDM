@@ -148,11 +148,11 @@ void DisplayReconfigurationCallback(CGDirectDisplayID cg_id,
                                                                productID:CGDisplayModelNumber(display)
                                                              displayName:screenName]];
 
-            [submenu addItem:[[RestoreSettingsItem alloc] initWithTitle:@"Restore..."
-                                                                 action:@selector(restoreSettings:)
-                                                               vendorID:CGDisplayVendorNumber(display)
-                                                              productID:CGDisplayModelNumber(display)
-                                                            displayName:screenName]];
+            //[submenu addItem:[[RestoreSettingsItem alloc] initWithTitle:@"Restore..."
+            //                                                     action:@selector(restoreSettings:)
+            //                                                   vendorID:CGDisplayVendorNumber(display)
+            //                                                  productID:CGDisplayModelNumber(display)
+            //                                                displayName:screenName]];
 
             NSString* title = [currItem title];
 

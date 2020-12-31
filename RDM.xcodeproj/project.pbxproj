@@ -17,6 +17,7 @@
 		358F04E3212D7E6500671ABD /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358F04E2212D7E6500671ABD /* IOKit.framework */; };
 		35959C0225757F1E0002A45F /* HexNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35959C0125757F1E0002A45F /* HexNumberFormatter.swift */; };
 		35959C0525763EE40002A45F /* TextFieldWithMonospacedDigits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35959C0425763EE40002A45F /* TextFieldWithMonospacedDigits.swift */; };
+		35B19E282589F79500ED61D7 /* DisplayIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B19E272589F79500ED61D7 /* DisplayIcon.swift */; };
 		35C9D3B0212C04DA00D652F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C9D3AF212C04DA00D652F7 /* ViewController.swift */; };
 		35C9D3B2212C04DD00D652F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35C9D3B1212C04DD00D652F7 /* Assets.xcassets */; };
 		35C9D3B5212C04DD00D652F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35C9D3B3212C04DD00D652F7 /* Main.storyboard */; };
@@ -44,6 +45,7 @@
 		358F04E2212D7E6500671ABD /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		35959C0125757F1E0002A45F /* HexNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexNumberFormatter.swift; sourceTree = "<group>"; };
 		35959C0425763EE40002A45F /* TextFieldWithMonospacedDigits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithMonospacedDigits.swift; sourceTree = "<group>"; };
+		35B19E272589F79500ED61D7 /* DisplayIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayIcon.swift; sourceTree = "<group>"; };
 		35C9D3AB212C04DA00D652F7 /* RDM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RDM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35C9D3AF212C04DA00D652F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		35C9D3B1212C04DD00D652F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				35CC4996212C54AF00704BD7 /* bridging.h */,
 				35959C0125757F1E0002A45F /* HexNumberFormatter.swift */,
 				35959C0425763EE40002A45F /* TextFieldWithMonospacedDigits.swift */,
+				35B19E272589F79500ED61D7 /* DisplayIcon.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				8FC72A1E24F664BA004E10E1 /* Utils.swift in Sources */,
 				35959C0525763EE40002A45F /* TextFieldWithMonospacedDigits.swift in Sources */,
 				358D565D212DEDED00F9E9BF /* cmdline.mm in Sources */,
+				35B19E282589F79500ED61D7 /* DisplayIcon.swift in Sources */,
 				35C9D3B0212C04DA00D652F7 /* ViewController.swift in Sources */,
 				358D565E212DEDED00F9E9BF /* main.mm in Sources */,
 				8F48E61724FC761C0073123B /* RestoreSettings.swift in Sources */,
@@ -374,6 +378,7 @@
 				INFOPLIST_FILE = etc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MARKETING_VERSION = 2.5.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = net.alkalay.RDM;
@@ -399,6 +404,7 @@
 				INFOPLIST_FILE = etc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MARKETING_VERSION = 2.5.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = net.alkalay.RDM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
