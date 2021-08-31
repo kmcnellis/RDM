@@ -72,6 +72,7 @@ void DisplayReconfigurationCallback(CGDirectDisplayID cg_id,
         NSMutableArray* displayMenuItems = [NSMutableArray new];
         ResMenuItem*    currItem         = nil;
         int currentColorDepth = 32, currentRefreshRate = 0;
+        float currentAspectRatio = .5;
 
         {
             //ResMenuItem* mainItem = nil;
@@ -90,6 +91,7 @@ void DisplayReconfigurationCallback(CGDirectDisplayID cg_id,
             {
                 currentColorDepth = [currItem colorDepth];
                 currentRefreshRate = [currItem refreshRate];
+                currentAspectRatio = [currItem aspectRatio];
             }
             [displayMenuItems sortUsingSelector: @selector(compareResMenuItem:)];
 
@@ -99,6 +101,12 @@ void DisplayReconfigurationCallback(CGDirectDisplayID cg_id,
             for (int j=0; j < [displayMenuItems count]; j++)
             {
                 item = [displayMenuItems objectAtIndex: j];
+
+                if ([item aspectRatio] == currentAspectRatio)
+                {
+                  [item setEmoji: @" ✓"];
+                  [item setTextFormat: 0];
+                }
 
                 if ([item colorDepth] == currentColorDepth)
                 {

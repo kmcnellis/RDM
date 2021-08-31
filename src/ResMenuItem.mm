@@ -18,7 +18,7 @@
 
         modeNum = mode->derived.mode;
         scale = mode->derived.density;
-        
+
         width = mode->derived.width;
         height = mode->derived.height;
 
@@ -26,14 +26,8 @@
 
         colorDepth = (mode->derived.depth == 4) ? 32 : 16;
 
-        NSString* title;
-        NSString* emoji = (scale == 2.0f) ? @" ⚡️" : @"";
-        if (refreshRate)
-            title = [NSString stringWithFormat: @"%d × %d%@, %d Hz", width, height, emoji, refreshRate];
-        else
-            title = [NSString stringWithFormat: @"%d × %d%@", width, height, emoji];
-
-        [self setTitle: title];
+        [self setEmoji:@""];
+        [self setTextFormat:0];
         return self;
     }
     else
@@ -57,17 +51,29 @@
 
 - (void) setTextFormat: (int) textFormat
 {
-    NSString* title = nil;
-    if (textFormat == 1) {
-        NSString* emoji = (scale == 2.0f) ? @" ⚡️" : @"";
-        title = [NSString stringWithFormat: @"%d × %d%@", width, height, emoji];
-    }
+    NSString* title;
+    title = [NSString stringWithFormat: @"%d × %d%@", width, height, emoji];
 
-    if (textFormat == 2)
+    if (refreshRate && textFormat == 0)
+        title = [NSString stringWithFormat: @"%d × %d%@, %d Hz", width, height, emoji, refreshRate];
+
+    if (refreshRate && textFormat == 2)
         title = [NSString stringWithFormat: @"%d Hz", refreshRate];
 
-    if (title)
-        [self setTitle: title];
+    [self setTitle: title];
+}
+
+- (void) setEmoji: (NSString*) e
+{
+  if (scale == 2.0f)
+  {
+    emoji = [NSString stringWithFormat: @"%@ ⚡️",e];
+  }
+  else
+  {
+    emoji = [NSString stringWithFormat: @"%@",e];
+  }
+
 }
 
 - (CGDirectDisplayID) display
@@ -103,6 +109,11 @@
 - (float) scale
 {
     return scale;
+}
+
+- (float) aspectRatio
+{
+    return ((float) width)/((float) height);
 }
 
 - (NSComparisonResult) compareResMenuItem: (ResMenuItem*) otherItem

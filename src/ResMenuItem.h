@@ -10,16 +10,17 @@ static inline CFDictionaryRef CGDisplayModeGetDictionary(CGDisplayModeRef mode) 
 @interface ResMenuItem : NSMenuItem
 {
     CGDirectDisplayID _display;
-    
+
     int modeNum;
-    
+
     //CGDisplayModeRef _mode;
-    
+
     int refreshRate;
     float scale;
     int colorDepth;
     int width;
     int height;
+    NSString* emoji;
 }
 
 
@@ -32,6 +33,8 @@ static inline CFDictionaryRef CGDisplayModeGetDictionary(CGDisplayModeRef mode) 
 
 - (void) setTextFormat: (int) textFormat;
 
+- (void) setEmoji: (NSString*) e;
+
 
 //- (CGDisplayModeRef) mode;
 
@@ -42,6 +45,7 @@ static inline CFDictionaryRef CGDisplayModeGetDictionary(CGDisplayModeRef mode) 
 - (int) height;
 - (int) refreshRate;
 - (float) scale;
+- (float) aspectRatio;
 
 - (NSComparisonResult) compareResMenuItem: (ResMenuItem*) otherItem;
 
