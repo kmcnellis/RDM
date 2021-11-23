@@ -1,3 +1,6 @@
+#include <CoreGraphics/CGDirectDisplay.h>
+#include <CoreGraphics/CGDisplayConfiguration.h>
+
 #define NSStringFromCGError( value ) \
 ( \
     @{ \
@@ -40,10 +43,10 @@ typedef union
 
 extern "C"
 {
-void CGSGetCurrentDisplayMode(CGDirectDisplayID display, int* modeNum);
-void CGSConfigureDisplayMode(CGDisplayConfigRef config, CGDirectDisplayID display, int modeNum);
-void CGSGetNumberOfDisplayModes(CGDirectDisplayID display, int* nModes);
-void CGSGetDisplayModeDescriptionOfLength(CGDirectDisplayID display, int idx, modes_D4* mode, int length);
+extern void CGSGetCurrentDisplayMode(CGDirectDisplayID display, int* modeNum);
+extern void CGSConfigureDisplayMode(CGDisplayConfigRef config, CGDirectDisplayID display, int modeNum);
+extern void CGSGetNumberOfDisplayModes(CGDirectDisplayID display, int* nModes);
+extern void CGSGetDisplayModeDescriptionOfLength(CGDirectDisplayID display, int idx, modes_D4* mode, int length);
 };
 
 
