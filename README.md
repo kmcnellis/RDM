@@ -21,3 +21,7 @@ Code for toggling display mirroring is taken from https://github.com/fcanas/mirr
 
 Requires macOS 10.10 or higher for running, Xcode 10 for building. For older systems use the original version.
 Tested in macOS 10.15.6 with Xcode 11.4.
+
+
+### How to revert
+To revert all changes made by RDM, remove the `/Library/Displays/Contents/Resources/Overrides` folder.
